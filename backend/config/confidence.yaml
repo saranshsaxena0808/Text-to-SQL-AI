@@ -1,0 +1,11 @@
+version: "v1"
+low_confidence_threshold: 0.60
+high_hallucination_threshold: 0.45
+low_component_threshold: 0.50
+weights:
+  syntax_score: 0.15
+  schema_coverage: 0.20
+  execution_success: 0.20
+  hallucination_score: 0.25
+  multi_query_agreement: 0.10
+  explainability: 0.10

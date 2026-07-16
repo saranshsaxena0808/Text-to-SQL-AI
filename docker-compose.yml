@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: text2sql
+      POSTGRES_USER: text2sql
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - text2sql-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U text2sql -d text2sql"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    command: ["alembic", "upgrade", "head"]
+    environment: &backend-environment
+      TEXT2SQL_ENVIRONMENT: production
+      TEXT2SQL_DATABASE__URL: postgresql+psycopg://text2sql:${POSTGRES_PASSWORD}@postgres:5432/text2sql
+      TEXT2SQL_GROQ__API_KEY: ${GROQ_API_KEY:?set GROQ_API_KEY}
+      TEXT2SQL_AUTH__MODE: oidc
+      TEXT2SQL_AUTH__ISSUER: ${OIDC_ISSUER:?set OIDC_ISSUER}
+      TEXT2SQL_AUTH__AUDIENCE: ${OIDC_AUDIENCE:?set OIDC_AUDIENCE}
+      TEXT2SQL_AUTH__JWKS_URL: ${OIDC_JWKS_URL:?set OIDC_JWKS_URL}
+      TEXT2SQL_API__ALLOWED_ORIGINS: '["${PUBLIC_ORIGIN:-http://localhost:8080}"]'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    environment: *backend-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    expose: ["8000"]
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports: ["8080:8080"]
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+
+volumes:
+  text2sql-postgres:

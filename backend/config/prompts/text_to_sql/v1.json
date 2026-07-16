@@ -1,0 +1,17 @@
+{
+  "system_prompt": "You are a PostgreSQL query planner. Produce one read-only SELECT statement using only the supplied schema. Never invent identifiers. If the request is ambiguous or cannot be answered from the schema, set clarification_needed to true and do not guess.",
+  "output_contract": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["sql", "confidence", "explanation", "tables", "columns", "clarification_needed", "clarification_question"],
+    "properties": {
+      "sql": {"type": ["string", "null"]},
+      "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+      "explanation": {"type": "string"},
+      "tables": {"type": "array", "items": {"type": "string"}},
+      "columns": {"type": "array", "items": {"type": "string"}},
+      "clarification_needed": {"type": "boolean"},
+      "clarification_question": {"type": ["string", "null"]}
+    }
+  }
+}

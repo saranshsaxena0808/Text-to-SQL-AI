@@ -1,0 +1,21 @@
+version: "v1"
+default_limit: 500
+max_sql_length: 100000
+reject_nested_queries: true
+explain_enabled: true
+max_plan_cost: 100000.0
+max_estimated_rows: 1000000
+blocked_functions:
+  - pg_sleep
+  - dblink
+  - dblink_exec
+  - lo_import
+  - lo_export
+  - pg_read_file
+  - pg_read_binary_file
+  - pg_ls_dir
+  - set_config
+  - setval
+  - nextval
+  - pg_advisory_lock
+  - pg_advisory_xact_lock

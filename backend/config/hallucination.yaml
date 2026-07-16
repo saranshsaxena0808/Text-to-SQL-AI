@@ -1,0 +1,11 @@
+version: "v1"
+empty_result_risk: 0.25
+weights:
+  back_translation: 0.16
+  question_similarity: 0.12
+  sql_similarity: 0.10
+  result_validation: 0.16
+  aggregate_validation: 0.10
+  join_validation: 0.12
+  date_validation: 0.10
+  multi_query_verification: 0.14

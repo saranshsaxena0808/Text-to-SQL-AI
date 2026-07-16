@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "text2sql-backend"
+version = "0.1.0"
+description = "Enterprise Text-to-SQL backend"
+requires-python = ">=3.11"
+dependencies = [
+  "alembic>=1.14,<2",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.7,<3",
+  "SQLAlchemy>=2.0.36,<3",
+  "psycopg[binary]>=3.2,<4",
+  "numpy>=1.26,<3",
+  "faiss-cpu>=1.9,<2",
+  "sentence-transformers>=3.3,<6",
+  "groq>=0.37,<1",
+  "sqlglot>=26,<28",
+  "PyYAML>=6,<7",
+  "pandas>=2.2,<3",
+  "fastapi>=0.115,<1",
+  "uvicorn[standard]>=0.34,<1",
+  "PyJWT[crypto]>=2.10,<3",
+  "prometheus-client>=0.21,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9", "pytest-cov>=6,<7", "testcontainers[postgres]>=4.9,<5", "ruff>=0.9,<1", "pip-audit>=2.8,<3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
