@@ -43,7 +43,7 @@ class GroqSettings(BaseSettings):
 
     api_key: SecretStr = SecretStr("")
     allowed_models: list[str] = Field(default_factory=lambda: [
-        "openai/gpt-oss-20b", "openai/gpt-oss-120b", "llama-3.3-70b-versatile"
+        "llama-3.3-70b-versatile"
     ])
     strict_models: list[str] = Field(default_factory=lambda: [
         "openai/gpt-oss-20b", "openai/gpt-oss-120b"
